@@ -1,4 +1,5 @@
 import arcade
+from PIL import Image
 
 from constants import *
 
@@ -6,7 +7,7 @@ from constants import *
 class Player(arcade.Sprite):
     def __init__(self):
         super().__init__()
-        self.texture = arcade.load_texture("assets/icon.png")
+        self.texture = arcade.load_texture("assets/player.png")
         self.scale = PLAYER_SIZE / 4096
         self.center_x = SCREEN_WIDTH / 2
         self.center_y = SCREEN_HEIGHT / 2
