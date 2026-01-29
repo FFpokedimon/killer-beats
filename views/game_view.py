@@ -27,15 +27,20 @@ class GameView(arcade.View):
         self.bullets = arcade.SpriteList()
         self.bullets.append(Bullet((self.player.center_x, self.player.center_y)))
         self.bullet_timer = 0
+        self.bullet_frequency = BULLET_FREQUENCY
 
         self.audio = arcade.load_sound(f'assets/songs/wav/{SONGS_LIST[0]}.wav')
         self.audio_plaback = arcade.play_sound(self.audio)
+        self.drums = get_drum_timestamps(f'assets/songs/mid/{SONGS_LIST[0]}.mid')
 
-        self.drums = get_drum_timestamps(f'assets/songs/{SONGS_LIST[0]}.mid')
-
-        self.health_text = arcade.Text(f'Health: {self.player.health}', 10, SCREEN_HEIGHT, font_size=20,
+        self.health_text = arcade.Text(f'Health: {self.player.health}', 10, 0, font_size=20,
                                        color=tuple(map(lambda x: 255 - x, BACKGROUND_COLOR[:-1])))
-        self.health_text.y = self.health_text.y - self.health_text.content_size[1]
+        self.health_text.y = SCREEN_HEIGHT - self.health_text.content_size[1]
+        self.count = 0
+        self.count_text = arcade.Text(f'Count: {self.count}', 0, 0, font_size=20,
+                                      color=tuple(map(lambda x: 255 - x, BACKGROUND_COLOR[:-1])))
+        self.count_text.x = SCREEN_WIDTH - self.count_text.content_size[0] - 10
+        self.count_text.y = SCREEN_HEIGHT - self.count_text.content_size[1]
 
     def on_draw(self):
         self.clear()
@@ -43,6 +48,7 @@ class GameView(arcade.View):
         self.slashes.draw()
         self.bullets.draw()
         self.health_text.draw()
+        self.count_text.draw()
 
     def on_update(self, delta_time):
         self.slash_timer += delta_time
@@ -59,23 +65,24 @@ class GameView(arcade.View):
 
         if self.drums and self.slash_timer >= self.drums[0]:
             self.slashes.append(Slash())
+            self.count += SLASH_COUNT
             self.slash_timer = 0
             del self.drums[0]
-        elif self.slashes and self.slashes[-1].timer >= SLASH_DAMAGE_TIME[1]:
-            self.slashes[-1].damage_state[0] = False
-        elif self.slashes and self.slashes[-1].timer >= SLASH_DAMAGE_TIME[0]:
-            self.slashes[-1].damage_state[0] = True
-
-        if self.bullet_timer >= 1:
+        if self.bullet_timer >= self.bullet_frequency:
             self.bullets.append(Bullet((self.player.center_x, self.player.center_y)))
+            self.count += BULLET_COUNT
             self.bullet_timer = 0
+
+        self.count_text.text = f'Count: {self.count}'
+        self.count_text.x = SCREEN_WIDTH - self.count_text.content_size[0] - 10
+        self.bullet_frequency /= BULLET_FREQUENCY_ACCEL
 
         if arcade.check_for_collision_with_list(self.player, self.slashes):
             for slash in range(len(self.slashes)):
-                if not self.slashes[slash].damage_state[1] and self.slashes[slash].damage_state[0]:
+                if self.slashes[slash].damage_state and SLASH_DAMAGE_TIME[0] < self.slashes[slash].timer < \
+                        SLASH_DAMAGE_TIME[1]:
                     if arcade.check_for_collision(self.player, self.slashes[slash]):
-                        self.slashes[slash].damage_state[0] = False
-                        self.slashes[slash].damage_state[1] = True
+                        self.slashes[slash].damage_state = False
                         self.player.health -= SLASH_DAMAGE
                         if self.player.health <= 0:
                             self.player.health = 0

@@ -14,7 +14,7 @@ class Slash(arcade.Sprite):
         self.stage = 0
         self.texture = arcade.texture.Texture(Image.new("RGBA", (self.stage + 1, 4096), "red"))
         self.alpha = 0
-        self.damage_state = [False, False]
+        self.damage_state = True
 
     def update(self, delta_time):
         self.timer += delta_time
