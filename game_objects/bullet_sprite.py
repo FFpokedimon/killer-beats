@@ -1,7 +1,6 @@
 import random
 import arcade
 from math import sin, cos, atan2, degrees
-from PIL import Image
 
 from constants import *
 
