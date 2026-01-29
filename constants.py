@@ -6,7 +6,7 @@ PLAYER_SPEED = 1000
 SLASH_STAGES = 50
 SLASH_TIME = 0.01
 SLASH_DAMAGE = 5
-SLASH_DAMAGE_TIME = (0.22, 0.28)
+SLASH_DAMAGE_TIME = (0.37, 0.43)
 SLASH_COUNT = 100
 BULLET_WIDTH = 30
 BULLET_HEIGHT = 10
@@ -15,4 +15,5 @@ BULLET_FREQUENCY = 1
 BULLET_FREQUENCY_ACCEL = 1 + (10 ** -8)
 BULLET_DAMAGE = 10
 BULLET_COUNT = 200
-SONGS_LIST = ['Never-Gonna-Give-You-Up-3']
+SONGS_LIST = [('Michael Jackson - Billie Jean', 190), ('Queen - Bohemian Rapsody', 81),
+              ('Rick Astley - Never Gonna Give You Up', 557)]

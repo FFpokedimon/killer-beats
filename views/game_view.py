@@ -1,6 +1,8 @@
 import arcade
 import os
 
+from typing_extensions import Self
+
 from constants import *
 from game_objects.bullet_sprite import Bullet
 from game_objects.player_sprite import Player
@@ -9,9 +11,10 @@ from music_analysis import get_drum_timestamps
 
 
 class GameView(arcade.View):
-    def __init__(self):
+    def __init__(self, song):
         super().__init__()
         self.background_color = BACKGROUND_COLOR
+        self.song = song
 
     def setup(self):
         self.pressed = set()
@@ -21,17 +24,15 @@ class GameView(arcade.View):
         self.player_list.append(self.player)
 
         self.slashes = arcade.SpriteList()
-        self.slashes.append(Slash())
         self.slash_timer = 0
 
         self.bullets = arcade.SpriteList()
-        self.bullets.append(Bullet((self.player.center_x, self.player.center_y)))
         self.bullet_timer = 0
         self.bullet_frequency = BULLET_FREQUENCY
 
-        self.audio = arcade.load_sound(f'assets/songs/wav/{SONGS_LIST[0]}.wav')
+        self.audio = arcade.load_sound(f'assets/songs/wav/{SONGS_LIST[self.song][0]}.wav')
         self.audio_plaback = arcade.play_sound(self.audio)
-        self.drums = get_drum_timestamps(f'assets/songs/mid/{SONGS_LIST[0]}.mid')
+        self.drums = get_drum_timestamps(SONGS_LIST[self.song])
 
         self.health_text = arcade.Text(f'Health: {self.player.health}', 10, 0, font_size=20,
                                        color=tuple(map(lambda x: 255 - x, BACKGROUND_COLOR[:-1])))
@@ -66,7 +67,6 @@ class GameView(arcade.View):
         if self.drums and self.slash_timer >= self.drums[0]:
             self.slashes.append(Slash())
             self.count += SLASH_COUNT
-            self.slash_timer = 0
             del self.drums[0]
         if self.bullet_timer >= self.bullet_frequency:
             self.bullets.append(Bullet((self.player.center_x, self.player.center_y)))
