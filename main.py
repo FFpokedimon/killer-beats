@@ -1,10 +1,10 @@
 import arcade
 
 from constants import *
-from views.game_view import GameView
+from views.menu_view import MenuView
+
 if __name__ == "__main__":
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Killer Beats")
-    game_view = GameView(2)
-    game_view.setup()
-    window.show_view(game_view)
+    menu_view = MenuView()
+    window.show_view(menu_view)
     arcade.run()

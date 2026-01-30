@@ -1,5 +1,5 @@
-SCREEN_WIDTH = 1280
-SCREEN_HEIGHT = 720
+SCREEN_WIDTH = 1600
+SCREEN_HEIGHT = 900
 BACKGROUND_COLOR = (0, 0, 0, 255)
 PLAYER_SIZE = 64
 PLAYER_SPEED = 1000
@@ -12,8 +12,9 @@ BULLET_WIDTH = 30
 BULLET_HEIGHT = 10
 BULLET_SPEED = 200
 BULLET_FREQUENCY = 1
-BULLET_FREQUENCY_ACCEL = 1 + (10 ** -8)
+BULLET_FREQUENCY_ACCEL = 1 + (10 ** -6)
 BULLET_DAMAGE = 10
 BULLET_COUNT = 200
-SONGS_LIST = [('Michael Jackson - Billie Jean', 190), ('Queen - Bohemian Rapsody', 81),
-              ('Rick Astley - Never Gonna Give You Up', 557)]
+TRACK_LIST = ['Michael Jackson - Billie Jean', 'Star Wars - The Imperial March',
+              'Rick Astley - Never Gonna Give You Up', 'Queen - Bohemian Rapsody',
+              'twenty one pilots - Holding on to You']

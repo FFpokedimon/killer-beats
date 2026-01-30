@@ -1,26 +1,27 @@
 import mido
+import wave
+import contextlib
 
 
-def get_drum_timestamps(midifile_path):
-    mid = mido.MidiFile(f'assets/songs/mid/{midifile_path[0]}.mid')
-    drum_timestamps = []
-
-    DRUM_CHANNEL = [9, 10]
-
-    accumulated_ticks = 0
-    tempo = 500000
-    ticks_per_beat = mid.ticks_per_beat
+def get_drum_timestamps(midifile):
+    mid = mido.MidiFile(f'assets/songs/mid/{midifile}.mid')
+    durations = []
+    absolute_time = 0
 
     for msg in mid:
-        accumulated_ticks += msg.time
+        absolute_time += msg.time
 
-        if msg.type == 'set_tempo':
-            tempo = msg.tempo
+        if msg.type == 'note_on' and msg.velocity > 40:
+            if durations and durations[-1] != absolute_time or not durations:
+                durations.append(absolute_time)
 
-        if msg.time and msg.type == 'note_on' and msg.channel in DRUM_CHANNEL:
-            seconds = mido.tick2second(accumulated_ticks, ticks_per_beat, tempo)
-            drum_timestamps.append(seconds * midifile_path[1])
+    durations.pop(0)
 
-    print(drum_timestamps)
+    return durations
 
-    return sorted(drum_timestamps)
+def get_wav_duration(wavfile):
+    with contextlib.closing(wave.open(wavfile, 'r')) as f:
+        frames = f.getnframes()
+        rate = f.getframerate()
+        duration = frames / float(rate * f.getnchannels())
+    return duration
